@@ -1,0 +1,162 @@
+LSTM - Long Shot Term Memory - TO retain state for long term
+
+Understanding the foundation of Tensor Flow.
+Sentinal Analysis with Recurrent Nural Networks and Tensor Flow 
+Building Classification Model in tensor Flow.
+
+1. Tensor flow is sutaible for Deep Learning in Nural Networks
+
+Type of machine learning probleam
+1. Classification :- Assiging label to elements and events
+		Like - 	Is the email is comming is SPAM and HAM
+2. Regression:- To fit a line of curve in a exsiting data and use that line to predect new data that comes in
+
+3. Clustering:- dividing data into groups on that basis of how much they are similar.
+
+4. Rule Extraction:- Evolves If-Else pattern within the data
+
+5. Feature Vectors:- Are the input to Ml Classifier. and output will be the label.
+					Older ML Classifier are fully depend upon feature Vector. On that it will decide the output
+					
+					But today ML Classifer that not fully depend on feature vectors it tooks only the part of it.
+					
+6. Representation ML Based system :- Where we don't need human expert to tell ML algorithm to pay attention for what feature vectors for input, Representation system it selft 
+								figure out the what attention need to pay in feature vector, what feature are inmportant
+								And here the deep learing come into scenario where it try to learn how we are going to process the input through 
+								Feature Selection Alogorithm. 
+					
+7 More about Tensor Flow
+	In tensor flow every thing is a graph
+	What ever setup done in python are more nodes in a graph
+	Programming in tensor flow build a graphical model in a network
+	
+	Computation :- Graph is it self a computation where data get flow in and produce an output. And this computation is refered as Operators.
+	The edges that connect this operator/computation/nodes are knows as data flow.
+	The data get transform to new edges that moves to another nodes. "This edges are called tensor"
+	0 ------> 0
+			  |
+			 \|/
+			  0
+	Here we see that data flow (edges) are connecting the operators on the basis of input to node produce an output data ie edge. And this edges are known as tensor.
+	
+Note :- Corpous Of data
+		https://www.tensorflow.org/api_docs/python/
+		
+Computation Graph
+
+1. Direct acyclic Graph -
+	problem in TensorFlow are represented as Direct-acyclic Graph
+	
+2. 
+
+
+	Start With a program in Tensor Flow
+		1. Constants - Constants in tensor flow are immulable. You cannot check it during the course of the program.
+		 Computation.py
+			import tensorflow as tf
+			
+			a = tf.constant(6, name='constant_a')  ( where a = computation node of Tensor Graph
+														   6 = value hold by the edges toward the node
+														   constant_a = is name of tensor that being visualize in Tensor Board.)
+			b = tf.constant(4.5, name="const_b")
+			c = tf.constant(3.4, name="const_c")
+			d = tf.constant(100.2, name="const_d")
+
+			square = tf.square(a, name="square_a")	( Square the value of a - Which is an operation/node)
+			pow = tf.pow(b,c, name="pow_b_c")		( power of b is c)
+			sqrt = tf.sqrt(d, name="sqrt_d")
+
+			final_sum= tf.add_n([square, pow, sqrt],name="final_sum") ( add_n --> (Add all the value in an array))
+
+			sess=tf.Session() 					(A Session object encapsulates the environment in which Operation objects are executed, and Tensor objects are evaluated)
+
+			print("Square of a ",sess.run(square) )
+			print("Power of b ^ c ",sess.run(pow) )
+			print("Square root of d ",sess.run(sqrt) )
+			print("Final sum ",sess.run(final_sum) )
+
+			writer = tf.summary.FileWriter("/home/liveyoung/django/log/Computation", sess.graph) ( Here we generate the tensor flow graph to perticular folder)
+			writer.close()
+
+			sess.close()
+			
+		Executing of code
+			The logic of code is y= a^2 + b ^ C + SquareRoot(d)
+		
+			(tensor-env)abhideep@abhideep:~tensorFlow$ python3 Computation.py  												(It will execute the python file and generate pyc)
+			(tensor-env)abhideep@abhideep:~tensorFlow$ tensorboard --logdir=/home/liveyoung/django/log/Computation 			( It will run the tensorbord to figure out the tensor graph)      
+			(tensor-env)abhideep@abhideep:~tensorFlow$ tensorboard --inspect --logdir=home/liveyoung/django/log/Computation (To inspect the file is generated correctly or not)
+			
+Tensor:-
+	The central unit of data in TensorFlow. A tensor consist of a set of primitive values shaped into an array of any number of dimension.
+	So we can say Tensor is N-dimension array.
+	
+	Scalar - are 0-D tensor
+			Like 3,6.7, "a"
+			
+	Single dimension array/vector are 1-D tensor 
+			like [1,3,5,7]
+	Even 2-D matrices are 2-D tensor 
+			like [  [,5,7,9],
+					[4,5,6,10] ]
+					
+	We characterictis Tensor by three properties 
+		1. Rank of tensor  - No of Dimension present in tensor is his rank
+		2. Shape of Tensor - No of elements in a each dimension for tensor
+		3. Data Type 	   - The data type of each elements in the tensor 
+		
+	To determin the rank of tensor i.e dimension holding by tensor
+	
+		import tensorflow as tf
+		
+		sess = tf.Session()
+		
+		a = tf.constant(["How", "are", "You?"])
+		sess.run(tf.rank(a))		--> It will return 1 i.e it a 1-D tensor
+		
+		
+Now we are working with 1-D tensor 
+	
+		import tensorflow as tf
+
+		x = tf.constant([100,200,300], name='x')
+		y = tf.constant([1,2,3], name='y')
+
+		sum_x = tf.reduce_sum(x, name='reduce_x')
+		prod_y = tf.reduce_prod(y, name='reduce_y')
+
+		final_div = tf.div(sum_x,prod_y, name="final_div")
+		final_mean = tf.reduce_mean([sum_x,prod_y], name="final_mean")		
+
+		sess = tf.Session()
+
+		print ("X :- ", sess.run(x))
+		print ("Y :- ", sess.run(y))
+		print ("Sum Of X :- ", sess.run(sum_x))
+		print ("Multiplication of Y :- ", sess.run(prod_y))
+		print ("SUM_X/PROD_Y :- ", sess.run(final_div))
+		print ("Average between SUM_X and PROD_Y :- ", sess.run(final_mean))
+		print ("Rank of tensor X ", tf.rank(x))					#( If you check teh output you will find that Rank =1, Shape is 1-D and datatype is int32 )
+
+		writer = tf.summary.FileWriter("/home/liveyoung/django/log/TensorMath", sess.graph)
+		writer.close()
+
+		sess.close()
+		
+		Output will be 
+			X :-  [100 200 300]
+			Y :-  [1 2 3]
+			Sum Of X :-  600
+			Multiplication of Y :-  6
+			SUM_X/PROD_Y :-  100
+			Average between SUM_X and PROD_Y :-  303
+			Rank of tensor X  Tensor("Rank_1:0", shape=(), dtype=int32)
+	
+	
+	Computation graph in Tensor board you will find a Rank node. That is not define in code but it add by TensorFlow to perform other operation that being specified.
+	Behind the screen tensor flow add those complicaiton that required to perform other operation that explictily specified. 
+	
+		In perticilar code example tensor need to calculate the Rank of some matricies that being used. Given that sum_x and prod_y that being calculated for mean use
+		
+			
+			
